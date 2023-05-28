@@ -1,0 +1,62 @@
+int value =0;
+const int analogIn = A1;
+int humiditysensorOutput = 0;
+int RawValue= 0;
+double temp = 0;
+double Voltage = 0;
+int smoke=A4;
+int sensorValue = 0;
+const int buzzer= A3;
+int fsrAnalogPin = 0;
+int fsrReading;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(A0,INPUT);
+  pinMode(A2,INPUT);
+  pinMode(A3,OUTPUT);
+  pinMode(A4,INPUT);
+  
+}
+
+void loop()
+{
+  RawValue = analogRead(analogIn);
+  temp = (Voltage-500) * 0.1;
+  Serial.print("Temperature: ");
+  Serial.println(temp,1);
+  humiditysensorOutput = analogRead(A1);
+  Serial.print("Humidity: ");
+  Serial.print(map(humiditysensorOutput, 0, 1023, 10, 70));
+  Serial.println("%");
+  sensorValue = analogRead(smoke);
+  Serial.print("Air Quality: ");
+  Serial.println(sensorValue);
+  fsrReading = analogRead(fsrAnalogPin);
+  Serial.print("Analog reading = ");
+  Serial.println(fsrReading);
+  value = analogRead(A0);
+  if (temp < 50 && value< 10 && sensorValue<=100){
+
+tone(buzzer,220,100);
+    Serial.print("Motor ON");
+    Serial.print("\n");
+    Serial.print("Value of LDR: ");
+    Serial.println(value);
+    Serial.print("Fresh air ");
+    Serial.println(sensorValue);
+  }
+
+else
+  {
+    noTone(buzzer);
+    Serial.print("Motor OFF");
+    Serial.print("\n");
+    Serial.print("Value of LDR: ");
+    Serial.println(value);
+    Serial.print("Poor air ");
+    Serial.println(sensorValue);
+  }
+  delay(2000);
+}
